@@ -1,0 +1,21 @@
+{
+  "name": "page_speed_insights_report",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/SteveMoya/page_speed_insights_report#readme",
+  "bugs": {
+    "url": "https://github.com/SteveMoya/page_speed_insights_report/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SteveMoya/page_speed_insights_report.git"
+  },
+  "license": "ISC",
+  "author": "Steve_Moya_Cepeda",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  }
+}
