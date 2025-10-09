@@ -1,4 +1,5 @@
 # PageSpeed Insights Report Generator
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/27db6ec9-aff1-4849-92a7-696b137808a4" />
 
 A Node.js tool to batch analyze website performance using Google PageSpeed Insights API.
 
