@@ -1,3 +1,4 @@
 .env
-resultados_pagespeed.csv
+resultados_pagespeed_directo.csv
 urls.csv
+resultados_por_dominio/
