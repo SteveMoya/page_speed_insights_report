@@ -2,9 +2,6 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-// ==========================================
-// 1. CONFIGURACIÓN Y UTILIDADES COMPARTIDAS
-// ==========================================
 
 function loadEnv() {
     const envPath = path.join(__dirname, '.env');
