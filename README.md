@@ -1,198 +1,268 @@
-# 📊 Page Speed Insights Report
+# PageSpeed Insights Report Generator
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/27db6ec9-aff1-4849-92a7-696b137808a4" />
 
-<p align="center">
-  <strong>Herramienta de análisis de rendimiento web con Google PageSpeed Insights API</strong>
-</p>
+Una herramienta Node.js para analizar en lote el rendimiento de sitios web utilizando la API de Google PageSpeed Insights.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Google%20PSI-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="PageSpeed Insights">
-  <img src="https://img.shields.io/badge/Performance-Optimization-FF6B6B?style=for-the-badge" alt="Performance">
-</p>
+## 📋 Descripción
 
----
+Esta herramienta analiza automáticamente múltiples sitios web usando la API de Google PageSpeed Insights y genera un reporte CSV con los puntajes de rendimiento. Es perfecta para monitorear el rendimiento de múltiples sitios web simultáneamente.
 
-## 🎯 Descripción
+## ⚙️ Requisitos Previos
 
-Herramienta automatizada para analizar el rendimiento de sitios web utilizando la API de **Google PageSpeed Insights**. Genera reportes detallados con métricas de rendimiento, accesibilidad, mejores prácticas y SEO.
+- Node.js instalado (versión 14 o superior)
+- Clave API de Google PageSpeed Insights ([Obtener aquí](https://developers.google.com/speed/docs/insights/v5/get-started))
 
-**Características:**
-- 🚀 Análisis de rendimiento (Core Web Vitals)
-- ♿ Auditoría de accesibilidad
-- ✅ Verificación de mejores prácticas
-- 🔍 Análisis de SEO
-- 📱 Pruebas en mobile y desktop
-- 📊 Reportes en formato JSON y HTML
+## 🛠️ Instalación
 
----
-
-## 🛠️ Tecnologías
-
-| Tecnología | Uso |
-|-----------|-----|
-| **Node.js** | Runtime JavaScript |
-| **Google PSI API** | Análisis de rendimiento |
-| **Axios** | HTTP client para API calls |
-| **FS** | Generación de reportes |
-
----
-
-## 🚀 Instalación
-
+1. Clona el repositorio:
 ```bash
-# Clonar el repositorio
 git clone https://github.com/SteveMoya/page_speed_insights_report.git
 cd page_speed_insights_report
-
-# Instalar dependencias
-npm install
 ```
+
+2. Configura las variables de entorno:
+   - Crea un archivo `.env` en la raíz del proyecto
+   - Agrega tu clave API de PageSpeed Insights:
+```env
+PAGE_SPEED_INSIGHTS_API_KEY=tu_clave_api_aqui
+```
+
+## 📝 Uso
+
+El script ofrece **dos modos de ejecución** según tus necesidades:
+
+### 🎯 Modo 1: DIRECTO (Direct Mode)
+
+Analiza URLs específicas que proporcionas en el archivo CSV.
+
+**1. Prepara el archivo de entrada:**
+
+Agrega tus URLs al archivo `urls.csv`, una por línea (sin encabezados):
+```
+example.com
+another-site.com/specific-page
+https://mywebsite.com/landing
+```
+
+**2. Ejecuta el script en modo directo:**
+```bash
+node index.js direct
+```
+
+**3. Revisa los resultados:**
+
+El script genera un archivo `resultados_pagespeed_directo.csv` con tres columnas:
+- `Pagina`: URL analizada
+- `Puntaje_PageSpeed`: Score de 0-100 o N/A
+- `Error`: Mensaje de error si falló
+
+**Características del modo directo:**
+- ✅ Analiza solo las URLs exactas que especifiques
+- ✅ Procesa 15 URLs simultáneamente
+- ✅ Un solo archivo de salida consolidado
+- ✅ Ideal para: análisis puntuales, páginas específicas, comparaciones
 
 ---
 
-## 📋 Uso
+### 🕷️ Modo 2: CRAWLER (Sitemap Mode)
 
-### Análisis básico
+Descubre automáticamente todas las URLs de un sitio mediante su sitemap.
+
+**1. Prepara el archivo de entrada:**
+
+Agrega los dominios (sin rutas específicas) al archivo `urls.csv`:
+```
+example.com
+mywebsite.com
+anothersite.org
+```
+
+**2. Ejecuta el script en modo crawler:**
 ```bash
-node index.js https://ejemplo.com
+node index.js crawler
 ```
-
-### Análisis con estrategia específica
+O también:
 ```bash
-# Mobile
-node index.js https://ejemplo.com mobile
-
-# Desktop
-node index.js https://ejemplo.com desktop
+node index.js sitemap
 ```
 
-### Análisis múltiple
-```bash
-node index.js urls.txt
-```
+**3. Revisa los resultados:**
 
-El archivo `urls.txt` debe contener una URL por línea:
-```
-https://ejemplo1.com
-https://ejemplo2.com
-https://ejemplo3.com
-```
+El script crea una carpeta `resultados_por_dominio/` con un archivo CSV por cada dominio:
+- `example_com.csv`
+- `mywebsite_com.csv`
+- `anothersite_org.csv`
+
+Cada CSV contiene:
+- `URL`: Página encontrada en el sitemap
+- `Puntaje_PageSpeed`: Score de 0-100 o N/A
+- `Estado`: OK o mensaje de error
+
+**Características del modo crawler:**
+- ✅ Busca automáticamente el sitemap en `/robots.txt`, `/sitemap.xml`, `/sitemap_index.xml`
+- ✅ Procesa sitemaps anidados (sitemap index)
+- ✅ Genera reportes separados por dominio
+- ✅ Procesa 5 URLs simultáneamente por dominio
+- ✅ Resultados ordenados por score (peor a mejor)
+- ✅ Ideal para: auditorías completas, análisis de sitios enteros
 
 ---
 
-## 📊 Métricas Analizadas
+### 📊 Comparación de Modos
 
-### Core Web Vitals
-- **LCP** (Largest Contentful Paint) - Tiempo de carga del contenido principal
-- **FID** (First Input Delay) - Latencia de interacción
-- **CLS** (Cumulative Layout Shift) - Estabilidad visual
-- **FCP** (First Contentful Paint) - Primera pintura de contenido
-- **TTFB** (Time to First Byte) - Tiempo hasta el primer byte
-
-### Categorías de Análisis
-- **Performance** (0-100) - Rendimiento general
-- **Accessibility** (0-100) - Accesibilidad web
-- **Best Practices** (0-100) - Mejores prácticas
-- **SEO** (0-100) - Optimización para motores de búsqueda
+| Característica | Modo Direct | Modo Crawler |
+|---------------|-------------|--------------|
+| **Entrada** | URLs específicas | Dominios |
+| **Descubrimiento** | Manual | Automático (sitemap) |
+| **Concurrencia** | 15 URLs | 5 URLs |
+| **Salida** | 1 archivo CSV | 1 CSV por dominio |
+| **Uso ideal** | Páginas puntuales | Sitios completos |
 
 ---
 
-## 📁 Estructura del Proyecto
+### ⚠️ Nota: Comando sin parámetros
+
+Si ejecutas el script sin especificar el modo:
+```bash
+node index.js
+```
+
+Se mostrará un mensaje de ayuda con las opciones disponibles.
+
+## 📊 Salida
+
+### Modo Directo
+El script genera un archivo `resultados_pagespeed_directo.csv` con tres columnas:
+- `Pagina`: La URL analizada
+- `Puntaje_PageSpeed`: Puntaje de rendimiento (0-100) o "N/A" si el análisis falló
+- `Error`: Mensaje de error o vacío si fue exitoso
+
+**Ejemplo de salida (modo directo):**
+```csv
+Pagina,Puntaje_PageSpeed,Error
+https://example.com,85,
+https://mysite.com/page,92,
+https://broken-site.com,N/A,Status 404
+```
+
+### Modo Crawler
+El script crea una carpeta `resultados_por_dominio/` con un archivo CSV por cada dominio analizado:
+
+**Estructura de carpetas:**
+```
+resultados_por_dominio/
+├── example_com.csv
+├── mywebsite_com.csv
+└── anothersite_org.csv
+```
+
+**Ejemplo de salida (modo crawler):**
+```csv
+URL,Puntaje_PageSpeed,Estado
+https://example.com/page1,45,OK
+https://example.com/page2,78,OK
+https://example.com/page3,95,OK
+```
+
+Los resultados están ordenados de menor a mayor score para identificar fácilmente las páginas que necesitan optimización.
+
+## ⚡ Características
+
+- **Dos modos de operación**: Directo (URLs específicas) y Crawler (sitios completos)
+- **Análisis en lote** de múltiples URLs
+- **Procesamiento paralelo**: 15 peticiones simultáneas (modo directo) o 5 (modo crawler)
+- **Descubrimiento automático de sitemaps** desde robots.txt
+- **Soporte para sitemap index** (sitemaps anidados)
+- **Adición automática del protocolo HTTPS**
+- **Generación de reportes en formato CSV**
+- **Reportes organizados por dominio** (modo crawler)
+- **Configuración mediante variables de entorno**
+- **Indicadores visuales en tiempo real** con emojis de estado (🟢🟠🔴)
+- **Manejo robusto de errores** y logging detallado
+- **Sin dependencias externas** (solo módulos nativos de Node.js)
+
+## 🚀 Rendimiento
+
+- Procesa URLs en lotes de 5 peticiones concurrentes
+- Maneja automáticamente los límites de tasa de la API
+- Manejo eficiente de archivos CSV
+- Usa solo módulos nativos de Node.js (`https`, `fs`, `path`)
+
+## ⚠️ Manejo de Errores
+
+- Valida la presencia de la clave API al inicio
+- Maneja errores de red de forma elegante
+- Reporta análisis fallidos en el CSV de salida
+- Mensajes de error descriptivos en consola
+- Continúa procesando URLs incluso si algunas fallan
+
+## 📂 Estructura del Proyecto
 
 ```
 page_speed_insights_report/
-├── index.js              # Script principal
-├── package.json          # Dependencias
-├── reports/              # Reportes generados
-│   ├── json/            # Reportes JSON
-│   └── html/            # Reportes HTML
-└── README.md
+├── index.js                      # Script principal con ambos modos
+├── package.json                  # Configuración del proyecto
+├── .env                          # Variables de entorno (crear manualmente)
+├── urls.csv                      # Archivo de entrada con URLs o dominios
+├── resultados_pagespeed_directo.csv     # Salida del modo directo
+├── resultados_por_dominio/       # Carpeta con salidas del modo crawler
+│   ├── example_com.csv
+│   ├── mywebsite_com.csv
+│   └── ...
+└── README.md                     # Este archivo
 ```
 
----
+## 🔧 Configuración Avanzada
 
-## 📝 Ejemplo de Output
+### Ajustar el límite de concurrencia
 
-```json
-{
-  "url": "https://ejemplo.com",
-  "timestamp": "2024-01-15T10:30:00Z",
-  "strategy": "mobile",
-  "scores": {
-    "performance": 92,
-    "accessibility": 98,
-    "best-practices": 95,
-    "seo": 100
-  },
-  "metrics": {
-    "LCP": 2.1,
-    "FID": 45,
-    "CLS": 0.05,
-    "FCP": 1.8,
-    "TTFB": 0.6
-  }
-}
+Puedes modificar el número de peticiones simultáneas editando las variables `concurrencyLimit` en `index.js`:
+
+**Para el modo directo** (línea ~103):
+```javascript
+const concurrencyLimit = 15; // Valor por defecto
 ```
 
----
+**Para el modo crawler** (línea ~259):
+```javascript
+const concurrencyLimit = 5; // Valor por defecto, más conservador
+```
 
-## 🔧 Configuración
+**Nota:** Ten cuidado con valores muy altos para evitar:
+- Límites de tasa de la API de Google
+- Sobrecarga del servidor objetivo
+- Posibles bloqueos por exceso de peticiones
 
-Puedes configurar el script editando las opciones en `index.js`:
+### Estrategia de análisis
+
+El script está configurado para analizar en modo **mobile** por defecto. Para cambiar a desktop, modifica la línea 44:
 
 ```javascript
-const options = {
-  strategy: 'mobile',        // 'mobile' o 'desktop'
-  category: ['performance'], // Categorías a analizar
-  locale: 'es-419'           // Idioma del reporte
-};
+// Cambiar de 'mobile' a 'desktop'
+const apiEndpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&key=${PAGE_SPEED_INSIGHTS_API_KEY}&strategy=desktop`;
 ```
 
----
+### Variables de entorno personalizadas
 
-## 💡 Casos de Uso
+Puedes configurar rutas personalizadas en tu archivo `.env`:
 
-- **Auditoría SEO**: Identificar problemas de rendimiento que afectan el ranking
-- **Optimización Web**: Monitorear mejoras de rendimiento después de cambios
-- **Benchmarking**: Comparar rendimiento de múltiples sitios
-- **Monitoreo Continuo**: Integrar en pipelines CI/CD
-- **Reportes para Clientes**: Generar reportes profesionales de rendimiento
-
----
-
-## 📊 Interpretación de Scores
-
-| Score | Clasificación | Color |
-|-------|---------------|-------|
-| 90-100 | 🟢 Bueno | Verde |
-| 50-89 | 🟠 Necesita Mejora | Naranja |
-| 0-49 | 🔴 Pobre | Rojo |
-
----
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Para cambios importantes:
-1. Abre un issue para discutir lo que quieres cambiar
-2. Haz fork del repositorio
-3. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-4. Commit tus cambios (`git commit -m 'Add AmazingFeature'`)
-5. Push a la rama (`git push origin feature/AmazingFeature`)
-6. Abre un Pull Request
-
----
+```env
+PAGE_SPEED_INSIGHTS_API_KEY=tu_clave_api_aqui
+# Agrega más configuraciones según necesites
+```
 
 ## 📄 Licencia
 
-MIT © Steve Moya Cepeda
+ISC License
 
----
+## 👤 Autor
 
-<p align="center">
-  <a href="https://stevemoya.me" target="_blank">
-    <img src="https://img.shields.io/badge/Portfolio-stevemoya.me-00D4FF?style=for-the-badge&labelColor=0A0A0A" alt="Portfolio">
-  </a>
-  <a href="https://linkedin.com/in/steve-moya-cepeda" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-  </a>
-</p>
+Steve Moya Cepeda
+
+## 🔗 Repositorio
+
+[GitHub Repository](https://github.com/SteveMoya/page_speed_insights_report)
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un issue primero para discutir los cambios que te gustaría realizar.
