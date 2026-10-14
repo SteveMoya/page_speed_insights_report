@@ -2,3 +2,12 @@
 resultados_pagespeed_directo.csv
 urls.csv
 resultados_por_dominio/
+
+# Listas de clientes (no se versionan)
+free-urls.csv
+ricardo-urls.csv
+
+# Config local de herramientas de agente (especifica de la maquina)
+.claude/
+.codex/
+.atl/
